@@ -164,6 +164,13 @@
       align-items:center;
       justify-content:center;
     }
+    .hero-sticky::before {
+      content:'';
+      position:absolute;
+      inset:0;
+      background:var(--black);
+      z-index:0;
+    }
 
     /* Logo — locked to viewport centre, fades on scroll only */
     .hero-logo-wrap {
@@ -187,7 +194,6 @@
     .sphere-wrap {
       position:absolute;
       inset:0;
-      mix-blend-mode:screen;
       z-index:1;
       pointer-events:none;
     }
@@ -200,6 +206,7 @@
       height:60vmin;
       max-width:900px;
       max-height:900px;
+      mix-blend-mode:screen;
     }
     #hero-sphere svg,
     #hero-sphere canvas {
