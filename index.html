@@ -165,10 +165,13 @@
       justify-content:center;
     }
 
-    /* Logo fades out as scroll begins */
+    /* Logo — locked to viewport centre, fades on scroll only */
     .hero-logo-wrap {
-      position:absolute;
-      inset:0;
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -178,7 +181,6 @@
     .hero-logo {
       width:min(340px, 55vw);
       display:block;
-      margin:0 auto;
     }
 
     /* Sphere */
@@ -749,8 +751,10 @@
       const progress = clamp(scrolled / total, 0, 1);
 
       // Logo opacity: full until 0.12, gone by 0.22
-      const logoOpacity = 1 - norm(progress, 0.12, 0.22);
+      // Also hide completely once past the hero sequence
+      const logoOpacity = progress > 0.22 ? 0 : 1 - norm(progress, 0.12, 0.22);
       heroLogoWrap.style.opacity = logoOpacity;
+      heroLogoWrap.style.visibility = logoOpacity === 0 ? 'hidden' : 'visible';
 
       // Taglines
       taglineWindows.forEach(({ in: inP, out: outP }, i) => {
