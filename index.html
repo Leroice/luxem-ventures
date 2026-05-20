@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>LUXEM Ventures</title>
+  <meta name="description" content="LUXEM exists to support innovation and challenge industry norms, empowering Founders to enter, swim, and thrive in uncharted waters.">
+  <meta property="og:title" content="LUXEM Ventures">
+  <meta property="og:description" content="Globally informed, better networked, more collaborative venture capital">
+  <meta property="og:type" content="website">
+  <meta name="twitter:title" content="LUXEM Ventures">
+  <meta name="twitter:description" content="Globally informed, better networked, more collaborative venture capital">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="images/favicon.png" rel="shortcut icon" type="image/x-icon">
+  <link href="images/webclip.png" rel="apple-touch-icon">
+
+  <!-- Lottie player — only dependency, ~60KB gzipped -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+
+  <style>
+    /* ─── FONTS ─────────────────────────────────────────────────── */
+    @font-face { font-family:'Akkurat'; src:url('fonts/Akkurat-Light.otf') format('opentype'); font-weight:300; font-style:normal; font-display:swap; }
+    @font-face { font-family:'Akkurat'; src:url('fonts/Akkurat-Normal.otf') format('opentype'); font-weight:400; font-style:normal; font-display:swap; }
+    @font-face { font-family:'Akkurat'; src:url('fonts/Akkurat-Normal-Italic.otf') format('opentype'); font-weight:400; font-style:italic; font-display:swap; }
+    @font-face { font-family:'Akkurat'; src:url('fonts/Akkurat-Light-Italic.otf') format('opentype'); font-weight:300; font-style:italic; font-display:swap; }
+    @font-face { font-family:'Akkurat'; src:url('fonts/Akkurat-Bold.otf') format('opentype'); font-weight:700; font-style:normal; font-display:swap; }
+    @font-face { font-family:'Akkurat'; src:url('fonts/Akkurat-Bold-Italic.otf') format('opentype'); font-weight:700; font-style:italic; font-display:swap; }
+
+    /* ─── TOKENS ─────────────────────────────────────────────────── */
+    :root {
+      --white:       #ffffff;
+      --black:       #030303;
+      --green:       #4c6d55;
+      --mushroom:    #ebe7e3;
+      --mushroom-50: rgba(235,231,227,0.5);
+      --mushroom-60: rgba(235,231,227,0.6);
+    }
+
+    /* ─── RESET ──────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    html { scroll-behavior:smooth; }
+    body {
+      font-family:'Akkurat', sans-serif;
+      font-weight:300;
+      font-size:1rem;
+      line-height:1.4;
+      color:var(--white);
+      background-color:var(--black);
+      overflow-x:hidden;
+    }
+    a { cursor:pointer; }
+    img { display:block; max-width:100%; }
+    ul { list-style:none; }
+
+    /* ─── PRELOADER ──────────────────────────────────────────────── */
+    #preloader {
+      position:fixed;
+      inset:0;
+      z-index:100000;
+      background:var(--mushroom);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:opacity 0.6s ease, visibility 0.6s ease;
+    }
+    #preloader.hidden { opacity:0; visibility:hidden; pointer-events:none; }
+    #preloader-lottie { width:52%; max-width:480px; }
+
+    /* ─── NAV ────────────────────────────────────────────────────── */
+    .nav {
+      position:sticky;
+      top:0;
+      z-index:10000;
+      width:100%;
+      backdrop-filter:blur(3px);
+      -webkit-backdrop-filter:blur(3px);
+      background:linear-gradient(rgba(3,3,3,0.9), rgba(3,3,3,0));
+      background-color:rgba(3,3,3,0.8);
+    }
+    .nav-inner {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:20px;
+      max-width:2200px;
+      margin:0 auto;
+      position:relative;
+    }
+    .nav-logo img { max-width:180px; }
+    .nav-links { display:flex; align-items:center; gap:0; }
+    .nav-link {
+      color:var(--mushroom-60);
+      text-decoration:none;
+      font-size:14px;
+      font-weight:300;
+      letter-spacing:0.25px;
+      padding:5px 12px 5px 0;
+      transition:color 0.2s;
+    }
+    .nav-link:hover { color:var(--white); }
+    .btn-ghost {
+      display:inline-block;
+      border:1px solid var(--white);
+      background:transparent;
+      color:var(--white);
+      border-radius:20px;
+      padding:8px 28px;
+      font-family:'Akkurat', sans-serif;
+      font-size:0.9rem;
+      font-weight:300;
+      text-decoration:none;
+      cursor:pointer;
+      transition:background-color 0.2s, border-color 0.2s;
+    }
+    .btn-ghost:hover { background-color:var(--green); border-color:var(--green); }
+    .nav-toggle {
+      display:none;
+      background:none;
+      border:none;
+      cursor:pointer;
+      padding:8px;
+      flex-direction:column;
+      gap:5px;
+    }
+    .nav-toggle span {
+      display:block;
+      width:22px;
+      height:1px;
+      background:var(--mushroom);
+      transition:all 0.2s;
+    }
+
+    /* ─── HERO SCROLL SEQUENCE ───────────────────────────────────── */
+    /*
+      Structure:
+        .hero-sequence  — 400vh scroll container (position:relative)
+          .hero-sticky  — 100vh sticky viewport
+            .sphere-wrap — Lottie sphere (mix-blend-mode:screen)
+            .tagline-wrap — centred taglines, each absolutely positioned
+    */
+    .hero-sequence {
+      position:relative;
+      height:400vh;
+    }
+    .hero-sticky {
+      position:sticky;
+      top:0;
+      height:100vh;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    /* Logo fades out as scroll begins */
+    .hero-logo-wrap {
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:2;
+      pointer-events:none;
+    }
+    .hero-logo { width:min(340px, 55vw); }
+
+    /* Sphere */
+    .sphere-wrap {
+      position:absolute;
+      inset:0;
+      mix-blend-mode:screen;
+      z-index:1;
+      pointer-events:none;
+    }
+    #hero-sphere {
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%);
+      width:60%;
+      max-width:900px;
+    }
+    #hero-sphere svg {
+      width:100% !important;
+      height:auto !important;
+      display:block;
+    }
+
+    /* Taglines */
+    .tagline-wrap {
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:3;
+      pointer-events:none;
+    }
+    .hero-tagline {
+      position:absolute;
+      width:100%;
+      text-align:center;
+      font-size:clamp(2.2rem, 5vw, 4rem);
+      font-weight:400;
+      letter-spacing:-0.06em;
+      line-height:1.05;
+      opacity:0;
+      transform:translateY(16px);
+      transition:opacity 0.5s ease, transform 0.5s ease;
+      padding:0 20px;
+    }
+    .hero-tagline.visible {
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    /* ─── CONTENT ────────────────────────────────────────────────── */
+    .section {
+      width:100%;
+      max-width:2200px;
+      margin:0 auto;
+      padding:0 20px 4rem;
+    }
+
+    .section-row {
+      border-top:0.5px solid var(--mushroom-50);
+      margin-top:8rem;
+      padding-top:8rem;
+      display:grid;
+    }
+    .section-row.no-border { border-top:none; margin-top:12rem; padding-top:0; }
+
+    .section-label {
+      font-size:2rem;
+      font-weight:300;
+      letter-spacing:-0.07rem;
+      margin:0;
+      line-height:1;
+    }
+
+    /* Purpose */
+    #purpose .section-row { grid-template-columns:2fr 1fr 4fr 5fr; }
+    .purpose-text {
+      grid-column:4;
+      font-size:clamp(1.5rem, 3vw, 2.4rem);
+      font-weight:300;
+      letter-spacing:-0.067rem;
+      line-height:1.17;
+    }
+
+    /* About */
+    #about .section-row { grid-template-columns:2fr 1fr 3fr 3fr 3fr; padding-top:12rem; }
+    .about-col { padding-right:2rem; }
+    .about-item { display:flex; flex-direction:column; margin-bottom:2rem; }
+    .about-number {
+      width:30px; height:30px;
+      border:1px solid var(--mushroom);
+      border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:0.85rem;
+      margin-bottom:1rem;
+      flex-shrink:0;
+    }
+    .about-text { font-size:1rem; font-weight:300; line-height:1.4rem; padding-right:5%; }
+
+    /* Origins */
+    #origins .section-row { grid-template-columns:2fr 1fr 1fr 5fr 1fr; }
+    .origins-text { grid-column:4; font-size:1rem; line-height:1.4rem; }
+    .origins-text p + p { margin-top:1.2rem; }
+
+    /* Invested */
+    #invested .section-row { grid-template-columns:2fr 3fr 3fr 3fr 1fr; }
+    .invested-col { padding-right:2rem; }
+    .invested-item { font-size:1rem; font-weight:300; line-height:2rem; }
+
+    /* People */
+    .person-row {
+      border-top:0.5px solid var(--mushroom-50);
+      margin-top:8rem;
+      padding-top:8rem;
+      display:grid;
+      grid-template-columns:2fr 1fr 1fr 3fr 3fr 2fr;
+      opacity:0;
+      transform:translateY(24px);
+      transition:opacity 0.7s ease, transform 0.7s ease;
+    }
+    .person-row.visible { opacity:1; transform:none; }
+    .person-row.no-top { margin-top:3rem; padding-top:3rem; }
+    .person-name { font-size:1.4rem; font-weight:300; line-height:1.4; margin:0; }
+    .person-bio { font-size:1rem; font-weight:300; line-height:1.5; margin-bottom:1.25rem; }
+    .person-bio a { color:var(--mushroom); text-decoration:none; }
+    .person-bio a:hover { text-decoration:underline; }
+
+    /* Accordion */
+    .person-expand { width:100%; margin-bottom:1.25rem; }
+    .expand-toggle {
+      width:100%;
+      display:flex; align-items:center; gap:0.75rem;
+      padding:0;
+      background:none; border:none;
+      border-top:1px solid var(--mushroom-50);
+      border-bottom:1px solid var(--mushroom-50);
+      color:var(--white);
+      font-family:'Akkurat', sans-serif;
+      font-size:1rem; font-weight:300;
+      cursor:pointer;
+      height:60px;
+      text-align:left;
+      transition:border-color 0.2s;
+    }
+    .expand-toggle:hover { border-color:var(--mushroom); }
+    .expand-icon {
+      width:10px; height:10px;
+      border-right:1px solid var(--white);
+      border-bottom:1px solid var(--white);
+      transform:rotate(45deg);
+      transition:transform 0.25s;
+      flex-shrink:0;
+    }
+    .expand-toggle[aria-expanded="true"] .expand-icon { transform:rotate(-135deg); }
+    .expand-body { display:none; padding:1.25rem 0; font-size:1rem; font-weight:300; line-height:1.5; }
+    .expand-body.open { display:block; }
+    .person-photo { border-radius:0.25rem; width:100%; }
+
+    /* Duo */
+    .duo-row {
+      display:grid;
+      grid-template-columns:1fr 6fr 4fr 1fr;
+      margin-top:10rem;
+      opacity:0;
+      transform:translateY(24px);
+      transition:opacity 0.7s ease, transform 0.7s ease;
+    }
+    .duo-row.visible { opacity:1; transform:none; }
+    .duo-photo { border-radius:0.25rem; width:100%; }
+    .duo-text {
+      padding-left:3rem;
+      font-size:clamp(1.3rem, 2.5vw, 2.4rem);
+      font-weight:300;
+      letter-spacing:-0.067rem;
+      line-height:1.17;
+      align-self:center;
+    }
+
+    /* Advisors */
+    .advisor-row {
+      border-top:0.5px solid var(--mushroom-50);
+      margin-top:8rem; padding-top:8rem;
+      display:grid;
+      grid-template-columns:2fr 1fr 1fr 5fr 1fr 2fr;
+      opacity:0;
+      transform:translateY(24px);
+      transition:opacity 0.7s ease, transform 0.7s ease;
+    }
+    .advisor-row.visible { opacity:1; transform:none; }
+    .advisor-row.no-top { margin-top:3rem; padding-top:3rem; }
+
+    /* Footer */
+    .footer-row {
+      border-top:0.5px solid var(--mushroom-50);
+      padding-top:6rem; padding-bottom:6rem;
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr 3fr 3fr 3fr;
+      align-items:center;
+    }
+    .footer-section-label { font-size:2rem; font-weight:300; letter-spacing:-0.07rem; }
+    .footer-email {
+      color:var(--mushroom-60); text-decoration:none;
+      font-size:14px; padding-top:14px;
+      display:block; transition:color 0.2s;
+    }
+    .footer-email:hover { color:var(--white); }
+    .footer-copyright { color:rgba(235,231,227,0.6); font-size:0.8rem; text-align:right; }
+
+    /* ─── MOBILE ─────────────────────────────────────────────────── */
+    @media (max-width:991px) {
+      .nav-links { display:none; flex-direction:column; }
+      .nav-links.open {
+        display:flex;
+        position:absolute; top:70px; left:0; right:0;
+        background:rgba(3,3,3,0.95);
+        backdrop-filter:blur(5px);
+        padding:1.5rem;
+        border-radius:0 0 20px 20px;
+        gap:0.5rem; align-items:flex-start;
+        z-index:999;
+      }
+      .nav-toggle { display:flex; }
+      #purpose .section-row { grid-template-columns:1fr; gap:2rem; }
+      .purpose-text { grid-column:1; }
+      #about .section-row { grid-template-columns:1fr; gap:0; padding-top:4rem; }
+      .about-col { padding-right:0; padding-bottom:1rem; }
+      #origins .section-row { grid-template-columns:1fr; gap:2rem; }
+      .origins-text { grid-column:1; }
+      #invested .section-row { grid-template-columns:1fr; }
+      .invested-col { padding:0; }
+      .invested-col.desktop-only { display:none; }
+      .invested-col.mobile-only { display:block !important; }
+      .person-row { grid-template-columns:1fr; gap:1.5rem; }
+      .person-row .section-label { display:none; }
+      .duo-row { grid-template-columns:1fr; gap:2rem; }
+      .duo-text { padding-left:0; }
+      .advisor-row { grid-template-columns:1fr; gap:1.5rem; }
+      .advisor-row .section-label { display:none; }
+      .footer-row { grid-template-columns:1fr 1fr; gap:2rem; }
+      .footer-copyright { text-align:left; }
+      #hero-sphere { width:90%; max-width:none; }
+    }
+    @media (max-width:767px) {
+      .section-row { margin-top:5rem; padding-top:4rem; }
+      .person-row { margin-top:4rem; padding-top:4rem; }
+      .advisor-row { margin-top:4rem; padding-top:4rem; }
+      .duo-row { margin-top:5rem; }
+      #about .section-row { padding-top:3rem; }
+      .footer-row { grid-template-columns:1fr; }
+      .hero-sequence { display:block; }
+    }
+    @media (max-width:479px) {
+      .section-label { font-size:1.6rem; }
+      .purpose-text { font-size:1.4rem; line-height:1.8rem; }
+      #hero-sphere { width:120%; max-width:none; margin:0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PRELOADER -->
+  <div id="preloader">
+    <div id="preloader-lottie"></div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo" aria-label="LUXEM Ventures home">
+        <img src="images/LUXEM_Ventures_Logo.svg" alt="LUXEM Ventures">
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="#purpose" class="nav-link">Purpose</a>
+        <a href="#about" class="nav-link">About</a>
+        <a href="#origins" class="nav-link">Origins</a>
+        <a href="#invested" class="nav-link">Invested</a>
+        <a href="#people" class="nav-link">People</a>
+        <a href="#people" class="nav-link">Advisors</a>
+        <a href="#contact" class="btn-ghost">Contact</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO SCROLL SEQUENCE -->
+  <div class="hero-sequence" id="heroSequence">
+    <div class="hero-sticky">
+
+      <!-- Logo — visible at top, fades as scroll starts -->
+      <div class="hero-logo-wrap" id="heroLogoWrap">
+        <img src="images/LUXEM_Ventures_Logo.svg" alt="LUXEM Ventures" class="hero-logo">
+      </div>
+
+      <!-- Sphere — Lottie, scrubbed by scroll -->
+      <div class="sphere-wrap">
+        <div id="hero-sphere"></div>
+      </div>
+
+      <!-- Taglines — appear sequentially through scroll -->
+      <div class="tagline-wrap">
+        <p class="hero-tagline" id="tagline1">Globally informed</p>
+        <p class="hero-tagline" id="tagline2">better networked</p>
+        <p class="hero-tagline" id="tagline3">more collaborative venture capital.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PURPOSE -->
+  <section id="purpose" class="section">
+    <div class="section-row no-border">
+      <h3 class="section-label">Purpose</h3>
+      <div></div>
+      <div></div>
+      <p class="purpose-text">LUXEM Ventures exists to support innovation and challenge industry norms, empowering Founders to enter, swim, and thrive in uncharted waters. We invest and re-invest time and capital in people, product, and company to effect positive and wide-reaching change.</p>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="section">
+    <div class="section-row" style="grid-template-columns:2fr 1fr 3fr 3fr 3fr;">
+      <h3 class="section-label">About</h3>
+      <div></div>
+      <div class="about-col">
+        <div class="about-item"><div class="about-number">1</div><p class="about-text">LUXEM Ventures is an Australian Family Office and investor in early stage technology companies.</p></div>
+        <div class="about-item"><div class="about-number">2</div><p class="about-text">We are a Family Office with a strictly venture investment mandate; a Venture Fund with a single Limited Partner.</p></div>
+      </div>
+      <div class="about-col">
+        <div class="about-item"><div class="about-number">3</div><p class="about-text">We are built, think, and behave like a start-up; we too walk a path less travelled.</p></div>
+        <div class="about-item"><div class="about-number">4</div><p class="about-text">We are invested in and actively co-invest alongside the best emerging venture fund managers in Australia; we are also invested in select international emerging fund managers with which we share information and valuable cross-market insights.</p></div>
+      </div>
+      <div class="about-col">
+        <div class="about-item"><div class="about-number">5</div><p class="about-text">We are sector agnostic and invest directly and readily within Australia at the pre-Seed and Seed stages.</p></div>
+        <div class="about-item"><div class="about-number">6</div><p class="about-text">Our networked approach, expertise, and capital complements that of the Founders we serve, and the emerging venture fund managers with which we partner.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ORIGINS -->
+  <section id="origins" class="section">
+    <div class="section-row" style="grid-template-columns:2fr 1fr 1fr 5fr 1fr;">
+      <h3 class="section-label">Origins</h3>
+      <div></div><div></div>
+      <div class="origins-text">
+        <p>Derived from Luxembourg; a proud country original in its endeavours, small in size but not in spirit. Steadfast and stubbornly true to its roots and values. Fiercely independent and therefore free of boundaries and restrictions.</p>
+        <p>Luxembourg is a country that is famously non-conformist, but universally respected by its peers; courageous, ambitious and motivated. A small fish in a big pond of land that is Europe, but never swallowed.</p>
+        <p>Luxembourg's rich history bears a lesson of patience, where collective and sustained grit paired with cleverness, will in time deliver perpetual prosperity and above all else — a widely respected legacy; a legacy worth building and protecting.</p>
+        <p>Coincidentally, Luxembourg built its empire via the banking and finance sector and boasts the largest GDP per capita of any nation; Luxembourg punches above its weight. It provides a spirited reference for our name, which has been adapted in a progressive manner to accurately reflect who we are and our core values; resulting in the name of LUXEM Ventures.</p>
+      </div>
+      <div></div>
+    </div>
+  </section>
+
+  <!-- INVESTED -->
+  <section id="invested" class="section">
+    <div class="section-row" style="grid-template-columns:2fr 3fr 3fr 3fr 1fr;">
+      <h3 class="section-label">Invested</h3>
+      <div class="invested-col desktop-only">
+        <p class="invested-item">Agri &amp; Food tech</p>
+        <p class="invested-item">Sports Media tech</p>
+        <p class="invested-item">Future of Work</p>
+        <p class="invested-item">Fintech</p>
+      </div>
+      <div class="invested-col desktop-only">
+        <p class="invested-item">Construction tech</p>
+        <p class="invested-item">B2B Marketplace</p>
+        <p class="invested-item">Clean Tech</p>
+        <p class="invested-item">Mobility</p>
+      </div>
+      <div class="invested-col desktop-only">
+        <p class="invested-item">Last mile logistics</p>
+        <p class="invested-item">Martech</p>
+        <p class="invested-item">Cyber Security</p>
+        <p class="invested-item">Death tech</p>
+      </div>
+      <div class="invested-col mobile-only" style="display:none;">
+        <p class="invested-item">Agri &amp; Food tech</p><p class="invested-item">Sports Media tech</p>
+        <p class="invested-item">Future of Work</p><p class="invested-item">Fintech</p>
+        <p class="invested-item">Construction tech</p><p class="invested-item">B2B Marketplace</p>
+        <p class="invested-item">Clean Tech</p><p class="invested-item">Mobility</p>
+        <p class="invested-item">Last mile logistics</p><p class="invested-item">Martech</p>
+        <p class="invested-item">Cyber Security</p><p class="invested-item">Death tech</p>
+      </div>
+      <div></div>
+    </div>
+  </section>
+
+  <!-- PEOPLE -->
+  <section id="people" class="section">
+
+    <div class="person-row" data-reveal>
+      <h3 class="section-label">People</h3>
+      <h4 class="person-name">Josh<br>Slattery</h4>
+      <div></div>
+      <div>
+        <p class="person-bio">An accomplished operator and tenured investor spanning several market cycles and including significant alternative investment experience. An avid believer in and supporter of innovation as an operator and professional investor, Josh Co-Founded and heads one of Australia's most forward-thinking and outwardly venture focussed Family Offices in LUXEM Ventures.</p>
+        <div class="person-expand">
+          <button class="expand-toggle" aria-expanded="false"><span class="expand-icon"></span>Learn More</button>
+          <div class="expand-body"><p>Josh scaled Slattery Australia to one of the largest privately owned businesses of its kind nationally, and one that is to this day recognised by peers as an industry leader with respect to innovation in its field. After decades at the helm of Slattery Australia, Josh stepped out of Management and into a non-operational role as Executive Chairman with a view to focus on, professionalise, and recalibrate his significant investing activities.</p></div>
+        </div>
+        <a href="https://www.linkedin.com/in/josh-slattery-9435861/" target="_blank" rel="noopener" class="btn-ghost">LinkedIn</a>
+      </div>
+      <div><img src="images/joshAlt2.png" srcset="images/joshAlt2-p-500.png 500w, images/joshAlt2-p-800.png 800w, images/joshAlt2.png 1000w" sizes="(max-width:767px) 90vw, 23vw" alt="Josh Slattery, Co-Founder" class="person-photo" loading="lazy"></div>
+      <div></div>
+    </div>
+
+    <div class="person-row no-top" data-reveal>
+      <h3 class="section-label" style="opacity:0;" aria-hidden="true">People</h3>
+      <h4 class="person-name">Dean<br>Bergin</h4>
+      <div></div>
+      <div>
+        <p class="person-bio">An experienced corporate advisor, fund manager, and multi-sector operator with significant early stage venture investment experience, unmatched local and global venture market knowledge, and deep networks within Australia's pre-seed and seed venture ecosystem. Proactive and hands on across the portfolio, Dean also serves as a Venture Partner at the PLG-focussed Tidal Ventures.</p>
+        <div class="person-expand">
+          <button class="expand-toggle" aria-expanded="false"><span class="expand-icon"></span>Learn More</button>
+          <div class="expand-body"><p>Dean grew up in and with Australia's maturing venture ecosystem syndicating his first Australia-to-US Seed investment in 2014 when B2B2C was all the rage. Syndicating and managing several significant seed investments enabled Dean to scratch an itch being investing at the pointiest end of the risk reward curve. Meanwhile Dean acquired and refined his knowledge and executional capabilities through stints in corporate advisory and private equity, and developed his operational chops serving as Managing Director in several private technology and other portfolio companies.</p></div>
+        </div>
+        <a href="https://www.linkedin.com/in/dean-bergin-3618531b1/?originalSubdomain=au" target="_blank" rel="noopener" class="btn-ghost">LinkedIn</a>
+      </div>
+      <div><img src="images/DeanALt2.png" srcset="images/DeanALt2-p-500.png 500w, images/DeanALt2-p-800.png 800w, images/DeanALt2-p-1080.png 1080w, images/DeanALt2.png 1327w" sizes="(max-width:767px) 90vw, 23vw" alt="Dean Bergin, Co-Founder" class="person-photo" loading="lazy"></div>
+      <div></div>
+    </div>
+
+    <div class="duo-row" data-reveal>
+      <div></div>
+      <div><img src="images/Luxem_Boys_1Luxem_Boys.jpg" srcset="images/Luxem_Boys_1-p-500.jpg 500w, images/Luxem_Boys_1-p-800.jpg 800w, images/Luxem_Boys_1-p-1080.jpg 1080w, images/Luxem_Boys_1Luxem_Boys.jpg 1200w" sizes="(max-width:767px) 95vw, 48vw" alt="Josh and Dean" class="duo-photo" loading="lazy"></div>
+      <p class="duo-text">Josh and Dean co-Founded LUXEM Ventures to invest heavily, flexibly, and purely in venture, bringing a different perspective to the Australian venture ecosystem, and with a view to export great Australian early stage companies and innovation to international markets.</p>
+      <div></div>
+    </div>
+
+    <div class="advisor-row" data-reveal>
+      <h3 class="section-label">Advisors</h3>
+      <h4 class="person-name">Grant<br>McCarthy</h4>
+      <div></div>
+      <div>
+        <p class="person-bio">Co-Founder and Managing Partner of <a href="https://www.tidalvc.com/" target="_blank" rel="noopener">Tidal Ventures</a>. Grant boasts 20+ years investing in the Seed stage across Australia, Asia, and the US, and significant operating experience care of his stint at Yahoo during its most transformative years. LUXEM Ventures is invested in Tidal Seed Funds and has through a uniquely strong relationship with Grant and Team learned the Tidal way, organically adopting and enacting this with regards to its focus on and preference for a product-led growth approach.</p>
+        <p class="person-bio">A mutual appreciation at both firm and human levels has led to Tidal and LUXEM Ventures extending their relationship further with Dean joining the Tidal Team as a Venture Partner. Grant and the Tidal Team are building some of the Australian venture industry of the future's core infrastructure.</p>
+        <a href="https://www.linkedin.com/in/grant-mccarthy-027405/" target="_blank" rel="noopener" class="btn-ghost">LinkedIn</a>
+      </div>
+      <div></div><div></div>
+    </div>
+
+    <div class="advisor-row no-top" data-reveal>
+      <h3 class="section-label" style="opacity:0;" aria-hidden="true">Advisors</h3>
+      <h4 class="person-name">Matt<br>Allen</h4>
+      <div></div>
+      <div>
+        <p class="person-bio">Co-Founder and co-CEO of <a href="https://www.tractorventures.com/" target="_blank" rel="noopener">Tractor Ventures</a>. Matt and wife Aprill Allen, and Tractor Ventures Co-Founder and COO, have been stalwarts of the Australian start-up ecosystem since 2013, and are now widely regarded as some of the best angel investors in Australia and New Zealand.</p>
+        <p class="person-bio">LUXEM Ventures is invested in Tractor Ventures with which it has built a strong relationship through their mutual interest in investing the venture asset class in such a way that Founders and Founding Teams' interests are well represented and protected in good times and bad.</p>
+        <a href="https://www.linkedin.com/in/matta0/" target="_blank" rel="noopener" class="btn-ghost">LinkedIn</a>
+      </div>
+      <div></div><div></div>
+    </div>
+
+    <div class="advisor-row no-top" data-reveal>
+      <h3 class="section-label" style="opacity:0;" aria-hidden="true">Advisors</h3>
+      <h4 class="person-name">Daniel<br>Darling</h4>
+      <div></div>
+      <div>
+        <p class="person-bio">Founder and Managing Partner of <a href="https://www.focal.vc" target="_blank" rel="noopener">Focal</a>, mentor at NYU's Endless Frontier Labs, and Stanford, Harvard, and Berkeley business school alum. Daniel is a pioneering Australian venture investor being one that started his journey in Silicon Valley and firmly in the North American market's pre-Seed stage.</p>
+        <p class="person-bio">Post his 5 years working in senior operating roles within the Californian tech industry, Daniel founded the San Francisco-based Focal to provide international investors with access to the first financing round of North American start-ups.</p>
+        <p class="person-bio">LUXEM Ventures is invested in Focal and enjoys the luxury of having Daniel and Focal usher it into the North American market and the significant cross-market insights and opportunities the Focal-LUXEM Ventures dynamic provides.</p>
+        <a href="https://www.linkedin.com/in/danieldarling/" target="_blank" rel="noopener" class="btn-ghost">LinkedIn</a>
+      </div>
+      <div></div><div></div>
+    </div>
+
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="section">
+    <div class="footer-row">
+      <h3 class="footer-section-label">Contact</h3>
+      <div></div><div></div><div></div>
+      <div><a href="mailto:info@luxemvc.com.au?subject=Contact%20from%20LUXEMVC.com.au" class="footer-email">info@luxemvc.com.au</a></div>
+      <div><p class="footer-copyright">© L U X E M 2025</p></div>
+    </div>
+  </section>
+
+  <script>
+  (function () {
+
+    // ─── PRELOADER ──────────────────────────────────────────────
+    const preloader = document.getElementById('preloader');
+
+    const preloaderAnim = lottie.loadAnimation({
+      container: document.getElementById('preloader-lottie'),
+      renderer: 'svg',
+      loop: false,
+      autoplay: true,
+      path: 'documents/LUXEM-Hero-Logo-Black.json'
+    });
+
+    preloaderAnim.addEventListener('complete', () => {
+      preloader.classList.add('hidden');
+      // start sphere load after preloader
+      initSphere();
+    });
+
+    // Fallback — hide after 3s regardless
+    setTimeout(() => {
+      preloader.classList.add('hidden');
+      initSphere();
+    }, 3000);
+
+
+    // ─── SPHERE SCROLL SCRUB ────────────────────────────────────
+    let sphereAnim = null;
+
+    function initSphere() {
+      sphereAnim = lottie.loadAnimation({
+        container: document.getElementById('hero-sphere'),
+        renderer: 'svg',
+        loop: false,
+        autoplay: false,
+        path: 'documents/1100Hero.json'
+      });
+
+      sphereAnim.addEventListener('DOMLoaded', () => {
+        updateHeroScroll();
+      });
+    }
+
+    // ─── HERO SCROLL LOGIC ──────────────────────────────────────
+    /*
+      The hero-sequence is 400vh tall.
+      Scroll progress 0→1 maps across that full height.
+
+      Breakdown:
+        0.00–0.15  logo visible, sphere invisible
+        0.15–0.30  logo fades out, sphere fades in, sphere scrubs 0→30%
+        0.30–0.50  tagline 1 visible
+        0.50–0.65  tagline 1 exits, tagline 2 enters
+        0.65–0.80  tagline 2 exits, tagline 3 enters
+        0.80–1.00  tagline 3 holds, sphere scrubs to end
+    */
+
+    const heroSequence  = document.getElementById('heroSequence');
+    const heroLogoWrap  = document.getElementById('heroLogoWrap');
+    const taglines      = [
+      document.getElementById('tagline1'),
+      document.getElementById('tagline2'),
+      document.getElementById('tagline3')
+    ];
+
+    const taglineWindows = [
+      { in: 0.28, out: 0.48 },
+      { in: 0.48, out: 0.68 },
+      { in: 0.68, out: 1.00 }
+    ];
+
+    function clamp(v, min, max) { return Math.min(Math.max(v, min), max); }
+    function norm(v, lo, hi)    { return clamp((v - lo) / (hi - lo), 0, 1); }
+    function lerp(a, b, t)      { return a + (b - a) * t; }
+
+    function updateHeroScroll() {
+      const rect     = heroSequence.getBoundingClientRect();
+      const total    = heroSequence.offsetHeight - window.innerHeight;
+      const scrolled = -rect.top;
+      const progress = clamp(scrolled / total, 0, 1);
+
+      // Logo opacity: full until 0.12, gone by 0.22
+      const logoOpacity = 1 - norm(progress, 0.12, 0.22);
+      heroLogoWrap.style.opacity = logoOpacity;
+
+      // Taglines
+      taglineWindows.forEach(({ in: inP, out: outP }, i) => {
+        const el = taglines[i];
+        let opacity, ty;
+        if (progress < inP) {
+          opacity = 0; ty = 16;
+        } else if (progress < inP + 0.06) {
+          const t = norm(progress, inP, inP + 0.06);
+          opacity = t; ty = lerp(16, 0, t);
+        } else if (outP === 1 || progress < outP - 0.06) {
+          opacity = 1; ty = 0;
+        } else {
+          const t = norm(progress, outP - 0.06, outP);
+          opacity = 1 - t; ty = lerp(0, -16, t);
+        }
+        el.style.opacity   = opacity;
+        el.style.transform = `translateY(${ty}px)`;
+      });
+
+      // Sphere scrub
+      if (sphereAnim && sphereAnim.totalFrames) {
+        const sphereProgress = norm(progress, 0.15, 1.0);
+        const frame = Math.round(sphereProgress * (sphereAnim.totalFrames - 1));
+        sphereAnim.goToAndStop(frame, true);
+      }
+    }
+
+    window.addEventListener('scroll', updateHeroScroll, { passive: true });
+    window.addEventListener('resize', updateHeroScroll, { passive: true });
+
+
+    // ─── NAV TOGGLE ─────────────────────────────────────────────
+    const navToggle = document.getElementById('navToggle');
+    const navLinks  = document.getElementById('navLinks');
+
+    navToggle.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', open);
+    });
+
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+
+    // ─── ACCORDION ──────────────────────────────────────────────
+    document.querySelectorAll('.expand-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', !expanded);
+        btn.nextElementSibling.classList.toggle('open', !expanded);
+      });
+    });
+
+
+    // ─── SCROLL REVEAL ───────────────────────────────────────────
+    const revealEls = document.querySelectorAll('[data-reveal]');
+    const revealObs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => revealObs.observe(el));
+
+
+    // ─── MOBILE INVESTED ─────────────────────────────────────────
+    function handleInvestedLayout() {
+      const isMobile = window.innerWidth <= 991;
+      document.querySelectorAll('.desktop-only').forEach(el => el.style.display = isMobile ? 'none' : 'block');
+      document.querySelectorAll('.mobile-only').forEach(el => el.style.display  = isMobile ? 'block' : 'none');
+    }
+    handleInvestedLayout();
+    window.addEventListener('resize', handleInvestedLayout);
+
+  })();
+  </script>
+
+</body>
+</html>
