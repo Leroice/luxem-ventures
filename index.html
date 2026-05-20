@@ -177,13 +177,18 @@
       top:50%;
       left:50%;
       transform:translate(-50%, -50%);
-      width:60%;
+      width:60vmin;
+      height:60vmin;
       max-width:900px;
+      max-height:900px;
     }
-    #hero-sphere svg {
+    #hero-sphere svg,
+    #hero-sphere canvas {
+      position:absolute !important;
+      top:0 !important;
+      left:0 !important;
       width:100% !important;
-      height:auto !important;
-      display:block;
+      height:100% !important;
     }
 
     /* Taglines */
